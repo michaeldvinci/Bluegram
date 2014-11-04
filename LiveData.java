@@ -38,7 +38,7 @@ import twitter4j.TwitterException;
  */
 public class LiveData extends javax.swing.JFrame {
     private String search, locatURL;
-    private GetLiveMedia glm = new GetLiveMedia();
+    private static GetLiveMedia glm;
 
     /**
      * Creates new form LiveData
@@ -134,14 +134,16 @@ public class LiveData extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void searchBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchBActionPerformed
+        glm = new GetLiveMedia();
         displayTabPane.removeAll();search = searchTF.getText();
         try {
             glm.TweetCollect(search);
             glm.InstaCollect(search);
         } catch (TwitterException | InstagramException | IOException ex) {
             Logger.getLogger(LiveData.class.getName()).log(Level.SEVERE, null, ex);
-        }locatURL = "http://maps.google.com/maps/api/staticmap?zoom=1&size=700x400&maptype=roadmap";
+        }
         
+        locatURL = "http://maps.google.com/maps/api/staticmap?zoom=1&size=700x400&maptype=roadmap";
         if((glm.getTLatitude() != 0) && (glm.getTLongitude() != 0)) {
         locatURL += "&markers=color:blue%7Clabel:T%7C" + glm.getTLatitude() + "," + glm.getTLongitude() + "&sensor=false";
         }
