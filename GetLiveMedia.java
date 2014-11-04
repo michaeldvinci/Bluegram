@@ -48,18 +48,17 @@ import org.jinstagram.exceptions.InstagramException;
  * @author michaeldvinci
  */
 public class GetLiveMedia {
-    private Query query;
-    private QueryResult result;
-    private String twitterString, authorizationUrl;
+    private String authorizationUrl, twitterString;
     private int creationTime;
-    public String instaURL, twitterURL;
-    private Twitter twitter;
-    private InstagramService igService;
-    private static final Token EMPTY_TOKEN = null;
-    private Verifier verifier;
-    private Scanner scan;
     private double tXCoord, tYCoord, iXCoord, iYCoord;
-    private LiveData ld;
+    private static Query query;
+    private static QueryResult result;
+    private static Twitter twitter;
+    private static InstagramService igService;
+    private static Verifier verifier;
+    private static Scanner scan;
+    private static final Token EMPTY_TOKEN = null;
+    public String instaURL, twitterURL;
     
     public void TweetCollect(String searchString) throws TwitterException {
         tXCoord = 0;
@@ -84,26 +83,10 @@ public class GetLiveMedia {
                 twitterURL = "https://twitter.com/" + status.getUser().getScreenName() + "/status/" + status.getId();
             }
             catch (Exception e) { }
-        } }
-    
-    public double getTLatitude() {
-        return tXCoord;
-    }
-    
-    public double getTLongitude() {
-        return tYCoord;
-    }
-    
-    public double getILatitude() {
-        return iXCoord;
-    }
-    
-    public double getILongitude() {
-        return iYCoord;
+        } 
     }
     
     public void InstaCollect(String searchString) throws InstagramException, IOException {
-        ld = new LiveData();
         iXCoord = 0;
         iYCoord = 0;
         scan = new Scanner(System.in);
@@ -144,4 +127,22 @@ public class GetLiveMedia {
                     catch (Exception e) {}            
                 } } }
         catch (Exception e) {}
-    } }
+    }
+    
+    public double getTLatitude() {
+        return tXCoord;
+    }
+    
+    public double getTLongitude() {
+        return tYCoord;
+    }
+    
+    public double getILatitude() {
+        return iXCoord;
+    }
+    
+    public double getILongitude() {
+        return iYCoord;
+    }
+    
+ }
