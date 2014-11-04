@@ -25,7 +25,6 @@
 import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
-import javax.swing.table.DefaultTableModel;
 import org.jinstagram.Instagram;
 import twitter4j.Query;
 import twitter4j.QueryResult;
@@ -38,7 +37,6 @@ import org.jinstagram.auth.InstagramAuthService;
 import org.jinstagram.auth.model.Token;
 import org.jinstagram.auth.model.Verifier;
 import org.jinstagram.auth.oauth.InstagramService;
-import org.jinstagram.entity.common.ImageData;
 import org.jinstagram.entity.common.Images;
 import org.jinstagram.entity.common.Location;
 import org.jinstagram.entity.tags.TagMediaFeed;
@@ -61,6 +59,7 @@ public class GetLiveMedia {
     private Verifier verifier;
     private Scanner scan;
     private double tXCoord, tYCoord, iXCoord, iYCoord;
+    private LiveData ld;
     
     public void TweetCollect(String searchString) throws TwitterException {
         tXCoord = 0;
@@ -77,14 +76,15 @@ public class GetLiveMedia {
         result = twitter.search(query);
         for (Status status : result.getTweets()) {
             try {
+                System.out.println(status.getGeoLocation());
+                System.out.println(status.getCreatedAt());
                 tXCoord = status.getGeoLocation().getLatitude();
                 tYCoord = status.getGeoLocation().getLongitude();
                 twitterString = ("@" + status.getUser().getScreenName() + ": " + status.getText() + " : " + "(" + tXCoord + ", " + tYCoord + ")");
                 twitterURL = "https://twitter.com/" + status.getUser().getScreenName() + "/status/" + status.getId();
             }
             catch (Exception e) { }
-        }      
-    }
+        } }
     
     public double getTLatitude() {
         return tXCoord;
@@ -103,13 +103,14 @@ public class GetLiveMedia {
     }
     
     public void InstaCollect(String searchString) throws InstagramException, IOException {
+        ld = new LiveData();
         iXCoord = 0;
         iYCoord = 0;
         scan = new Scanner(System.in);
         igService =  new InstagramAuthService()
                 .apiKey("4de0532c8b614ac68e54ca3cc13c7b83")
                 .apiSecret("99629942c7e24bb08d2e8f328103555a")
-                .callback("http://reveal-it.appspot.com/oauthtest")     
+                .callback("http://localhost")     
                 .build();
         
         authorizationUrl = igService.getAuthorizationUrl(EMPTY_TOKEN);
@@ -128,10 +129,10 @@ public class GetLiveMedia {
             for(int i = 0; i < 1; i++) {
                 for(MediaFeedData mediaData : mediaFeeds) {
                     try {
-                        mediaData.getLocation();
+                        System.out.println(mediaData.getLocation());
+                        System.out.println(mediaData.getCreatedTime());
                         Images image = mediaData.getImages();
                         Location location = mediaData.getLocation();
-                        ImageData highResolutionImg = image.getLowResolution();
                         creationTime = Integer.parseInt(mediaData.getCreatedTime());
                         
                         if(creationTime > 1414800000) {
@@ -139,13 +140,8 @@ public class GetLiveMedia {
                                 instaURL = mediaData.getLink();
                                 iXCoord = location.getLatitude();
                                 iYCoord = location.getLongitude();
-                            }
-                        }
-                    }
+                            } } }
                     catch (Exception e) {}            
-                }
-            }
-        }
+                } } }
         catch (Exception e) {}
-    }
-}
+    } }
